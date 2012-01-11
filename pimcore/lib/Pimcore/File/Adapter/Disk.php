@@ -57,6 +57,7 @@ class Pimcore_File_Adapter_Disk extends Pimcore_File_Adapter {
 			$parentPath = dirname($destination);
 			if (!is_dir($parentPath)) {
 				mkdir($parentPath, $file->getChmod(), true);
+				chmod($parentPath, $file->getChmod());
 			}
 
 			$result = copy($source, $destination);
@@ -81,6 +82,7 @@ class Pimcore_File_Adapter_Disk extends Pimcore_File_Adapter {
 
 		if (!is_dir($destination)) {
 			$result = mkdir($destination, $file->getChmod(), true);
+			chmod($destination, $file->getChmod());
 		}
 
 		while ($next = readdir($sourceHandle)) {
@@ -244,12 +246,13 @@ class Pimcore_File_Adapter_Disk extends Pimcore_File_Adapter {
 		// create the parent folder if it doesn't exist
 		if (!is_dir($parentPath)) {
 			$dirExists = mkdir($parentPath, $file->getChmod(), TRUE);
+			chmod($parentPath, $file->getChmod());
 		} else {
 			$dirExists = TRUE;
 		}
 
 		if ($dirExists === TRUE) {
-			if($file->isDir() && !is_dir($destination)) {
+			if($file->isDir() && is_file($destination)) {
 				$result = FALSE;
 			} else {
 				$result = rename($source, $destination);
@@ -285,6 +288,7 @@ class Pimcore_File_Adapter_Disk extends Pimcore_File_Adapter {
 		// create the parent folder if it doesn't exist
 		if (!is_dir($parentPath)) {
 			$result = mkdir($parentPath, $file->getChmod(), true);
+			chmod($parentPath, $file->getChmod());
 		}
 
 		// check if file and directory are writeable, if so save the file
