@@ -9,7 +9,7 @@
  * It is also available through the world-wide-web at this URL:
  * http://www.pimcore.org/license
  *
- * @copyright  Copyright (c) 2009-2010 elements.at New Media Solutions GmbH (http://www.elements.at)
+ * @copyright  Copyright © 2009-2010 elements.at New Media Solutions GmbH (http://www.elements.at)
  * @license    http://www.pimcore.org/license     New BSD License
  */
 
@@ -209,26 +209,6 @@ class Pimcore_API_Abstract
      * @param Object_Abstract $object
      */
     public function postUpdateObject(Object_Abstract $object)
-    {
-
-    }
-    
-    /**
-     * Hook called before a file is created, modified, or deleted
-     *
-     * @param Pimcore_Event_File $event
-     */
-    public function preFileChange(Pimcore_Event_File $event)
-    {
-
-    }
-
-    /**
-     * Hook called after a file is created, modified, or deleted
-     *
-     * @param Pimcore_Event_File $event
-     */
-    public function postFileChange(Pimcore_Event_File $event)
     {
 
     }

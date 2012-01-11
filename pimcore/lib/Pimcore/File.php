@@ -82,14 +82,7 @@ class Pimcore_File {
      * @return bool Returns TRUE on success or FALSE on failure.
      */
 	public function delete() {
-		$this->dispatchPreEvent(Pimcore_Event::EVENT_TYPE_FILE_DELETED);
-		
-		$result = $this->adapter->delete($this);
-		if($result !== FALSE) {
-			$this->dispatchPostEvent(Pimcore_Event::EVENT_TYPE_FILE_DELETED);
-		}
-		
-		return $result;
+		return $this->adapter->delete($this);
 	}
 	
 	
@@ -246,12 +239,7 @@ class Pimcore_File {
      * @return void Returns TRUE on success or FALSE on failure.
      */
     public function move($destination) {
-    	$this->dispatchPreEvent(Pimcore_Event::EVENT_TYPE_FILE_MOVED);
-    	$result = $this->adapter->move($this, $destination);
-    	
-    	if($result !== FALSE) {
-    		$this->dispatchPostEvent(Pimcore_Event::EVENT_TYPE_FILE_MOVED);
-    	}
+    	return $this->adapter->move($this, $destination);
     }
     
     
@@ -266,15 +254,7 @@ class Pimcore_File {
      * @return bool|int The number of bytes that were written to the file, or FALSE on failure.
      */
     public function save($contents = NULL) {
-    	$eventType = $this->exists() ? Pimcore_Event::EVENT_TYPE_FILE_MODIFIED : Pimcore_Event::EVENT_TYPE_FILE_CREATED;
-    	$this->dispatchPreEvent($eventType);
-    	
-    	$result = $this->adapter->save($this, $contents);
-    	if($result !== FALSE) {
-    		$this->dispatchPostEvent($eventType);
-    	}
-    	
-    	return $result;
+    	return $this->adapter->save($this, $contents);
     }
     
     
@@ -325,63 +305,6 @@ class Pimcore_File {
     public function setOldPath($path) {
     	$this->oldpath = $path;
     }
-	
-	
-	/**
-	 * Dispatches a plugin "pre" event for this file.
-	 * 
-	 * @access public
-	 * @param int $type The constant representing the type of file event to be dispatched. (default: NULL)
-	 * @return void
-	 */
-	public function dispatchPreEvent($type = NULL) {
-		switch($type) {
-			case Pimcore_Event::EVENT_TYPE_FILE_CREATED:
-				Pimcore_API_Plugin_Broker::getInstance()->preFileChange(new Pimcore_Event_File_Created($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_MODIFIED:
-				Pimcore_API_Plugin_Broker::getInstance()->preFileChange(new Pimcore_Event_File_Modified($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_DELETED:
-				Pimcore_API_Plugin_Broker::getInstance()->preFileChange(new Pimcore_Event_File_Deleted($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_MOVED:
-				Pimcore_API_Plugin_Broker::getInstance()->preFileChange(new Pimcore_Event_File_Moved($this));
-			break;
-			default:
-				Pimcore_API_Plugin_Broker::getInstance()->preFileChange(new Pimcore_Event_File($this));
-			break;
-		}
-		
-	}
-	
-	
-	/**
-	 * Dispatches a plugin "post" event for this file.
-	 * 
-	 * @access public
-	 * @param int The constant representing the type of file event to be dispatched. (default: NULL)
-	 * @return void
-	 */
-	public function dispatchPostEvent($type = NULL) {
-		switch($type) {
-			case Pimcore_Event::EVENT_TYPE_FILE_CREATED:
-				Pimcore_API_Plugin_Broker::getInstance()->postFileChange(new Pimcore_Event_File_Created($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_MODIFIED:
-				Pimcore_API_Plugin_Broker::getInstance()->postFileChange(new Pimcore_Event_File_Modified($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_DELETED:
-				Pimcore_API_Plugin_Broker::getInstance()->postFileChange(new Pimcore_Event_File_Deleted($this));
-			break;
-			case Pimcore_Event::EVENT_TYPE_FILE_MOVED:
-				Pimcore_API_Plugin_Broker::getInstance()->postFileChange(new Pimcore_Event_File_Moved($this));
-			break;
-			default:
-				Pimcore_API_Plugin_Broker::getInstance()->postFileChange(new Pimcore_Event_File($this));
-			break;
-		}
-	}
 
 
     /**
